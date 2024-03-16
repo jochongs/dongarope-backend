@@ -26,20 +26,20 @@ model Applicant {
   createdAt     DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime   @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt     DateTime?  @map("deleted_at") @db.Timestamptz(6)
-  Answer        Answer[]
   Generation    Generation @relation(fields: [generationIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_generation_tb_to_applicant_tb")
+  Answer        Answer[]
 }
 
 model Generation {
   idx       Int         @id @default(autoincrement())
   name      String      @db.VarChar
-  groupIdx  Int         @default(autoincrement()) @map("group_idx")
   createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime    @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt DateTime?   @map("deleted_at") @db.Timestamptz(6)
+  groupIdx  Int         @default(autoincrement()) @map("group_idx")
   Applicant Applicant[]
-  Question  Question[]
   Group     Group       @relation(fields: [groupIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction)
+  Question  Question[]
 
   @@map("generation_tb")
 }
@@ -65,4 +65,17 @@ model Question {
   Generation    Generation @relation(fields: [generationIdx], references: [idx])
 
   @@map("question_tb")
+}
+
+model EmailAuth {
+  idx       Int      @id @default(autoincrement())
+  email     String   @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+}
+
+model EmailCode {
+  idx       Int      @id @default(autoincrement())
+  email     String   @db.VarChar
+  code      String   @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 }
