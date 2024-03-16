@@ -20,6 +20,22 @@ export class GroupController {
     return await this.groupService.getGroupEntity(loginGroup.idx);
   }
 
+  @Get('/generation/all')
+  @UseGuards(GroupLoginAuthGuard)
+  public async getGenerationsByGroupIdx(
+    @Group() loginGroup: LoginGroupDto,
+  ): Promise<{
+    generations: GenerationEntity[];
+  }> {
+    const generations = await this.generationService.getGenerationsByGroupIdx(
+      loginGroup.idx,
+    );
+
+    return {
+      generations,
+    };
+  }
+
   @Post('/')
   public async createGroup(@Body() createDto: CreateGroupDto) {
     await this.groupService.createGroup(createDto);

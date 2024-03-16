@@ -27,7 +27,7 @@ export class GenerationController {
 
   @Get('/:uuid')
   public async getGenerationByUUID(
-    @Param('uuid') uuid: string,
+    @Param('uuid', ParseUUIDPipe) uuid: string,
   ): Promise<GenerationEntity> {
     return await this.generationService.getGenerationByUUID(uuid);
   }
