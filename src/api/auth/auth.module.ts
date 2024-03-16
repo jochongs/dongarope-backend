@@ -24,5 +24,6 @@ import { UtilModule } from '../../util/util.module';
   ],
   providers: [AuthService],
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}

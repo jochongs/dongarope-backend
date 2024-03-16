@@ -5,6 +5,8 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { NoAuthEmailException } from './exception/NoAuthEmailException';
 import { DuplicatedIdException } from './exception/DuplicatedIdException';
 import { UtilService } from '../../util/util.service';
+import { GroupEntity } from './entity/group.entity';
+import { GroupNotFoundException } from './exception/GroupNotFoundException';
 
 @Injectable()
 export class GroupService {
@@ -13,6 +15,20 @@ export class GroupService {
     private readonly emailAuthService: EmailAuthService,
     private readonly utilService: UtilService,
   ) {}
+
+  public async getGroupEntity(groupIdx: number): Promise<GroupEntity> {
+    const group = await this.prisma.group.findUnique({
+      where: {
+        idx: groupIdx,
+      },
+    });
+
+    if (!group) {
+      throw new GroupNotFoundException('Cannot find Group');
+    }
+
+    return GroupEntity.createGroupEntity(group);
+  }
 
   public async createGroup(createDto: CreateGroupDto) {
     const emailAuthState =
