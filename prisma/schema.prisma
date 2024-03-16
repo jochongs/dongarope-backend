@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Answer {
+  applicantIdx Int       @default(autoincrement()) @map("applicant_idx")
+  questionIdx  Int       @default(autoincrement()) @map("question_idx")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  Applicant    Applicant @relation(fields: [applicantIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_applicant_tb_to_answer_tb")
+  Question     Question  @relation(fields: [questionIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_question_tb_to_answer_tb")
+
+  @@id([applicantIdx, questionIdx])
+  @@map("answer_tb")
+}
+
+model Applicant {
+  idx           Int        @id @default(autoincrement())
+  generationIdx Int        @default(autoincrement()) @map("generation_idx")
+  name          String     @db.VarChar
+  email         String     @db.VarChar
+  createdAt     DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime   @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt     DateTime?  @map("deleted_at") @db.Timestamptz(6)
+  Answer        Answer[]
+  Generation    Generation @relation(fields: [generationIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_generation_tb_to_applicant_tb")
+}
+
+model Generation {
+  idx       Int         @id @default(autoincrement())
+  name      String      @db.VarChar
+  groupIdx  Int         @default(autoincrement()) @map("group_idx")
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime    @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime?   @map("deleted_at") @db.Timestamptz(6)
+  Applicant Applicant[]
+  Question  Question[]
+  Group     Group       @relation(fields: [groupIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("generation_tb")
+}
+
+model Group {
+  idx        Int          @id @default(autoincrement())
+  uuid       String       @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name       String       @db.VarChar
+  email      String       @db.VarChar
+  id         String       @db.VarChar
+  pw         String       @db.VarChar
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt  DateTime?    @map("deleted_at") @db.Timestamptz(6)
+  Generation Generation[]
+}
+
+model Question {
+  idx           Int        @id @default(autoincrement())
+  generationIdx Int        @default(autoincrement()) @map("generation_idx")
+  title         String     @db.VarChar
+  Answer        Answer[]
+  Generation    Generation @relation(fields: [generationIdx], references: [idx])
+
+  @@map("question_tb")
+}
