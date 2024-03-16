@@ -4,10 +4,15 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { Group } from '../../common/decorator/group.decorator';
 import { LoginGroupDto } from '../../common/dto/login-group.dto';
 import { GroupLoginAuthGuard } from '../../common/guard/group-auth.guard';
+import { GenerationEntity } from '../generation/entity/generation.entity';
+import { GenerationService } from '../generation/generation.service';
 
 @Controller('/group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) {}
+  constructor(
+    private readonly groupService: GroupService,
+    private readonly generationService: GenerationService,
+  ) {}
 
   @Get('/my')
   @UseGuards(GroupLoginAuthGuard)

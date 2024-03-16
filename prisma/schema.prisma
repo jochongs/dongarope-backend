@@ -37,6 +37,7 @@ model Generation {
   updatedAt DateTime    @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt DateTime?   @map("deleted_at") @db.Timestamptz(6)
   groupIdx  Int         @default(autoincrement()) @map("group_idx")
+  uuid      String      @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   Applicant Applicant[]
   Group     Group       @relation(fields: [groupIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction)
   Question  Question[]
