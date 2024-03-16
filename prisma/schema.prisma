@@ -10,6 +10,7 @@ datasource db {
 model Answer {
   applicantIdx Int       @default(autoincrement()) @map("applicant_idx")
   questionIdx  Int       @default(autoincrement()) @map("question_idx")
+  contents     String    @db.VarChar()
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   Applicant    Applicant @relation(fields: [applicantIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_applicant_tb_to_answer_tb")
   Question     Question  @relation(fields: [questionIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_question_tb_to_answer_tb")
@@ -28,6 +29,8 @@ model Applicant {
   deletedAt     DateTime?  @map("deleted_at") @db.Timestamptz(6)
   Generation    Generation @relation(fields: [generationIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_generation_tb_to_applicant_tb")
   Answer        Answer[]
+
+  @@map("applicant_tb")
 }
 
 model Generation {
@@ -56,6 +59,8 @@ model Group {
   updatedAt  DateTime     @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt  DateTime?    @map("deleted_at") @db.Timestamptz(6)
   Generation Generation[]
+
+  @@map("group_tb")
 }
 
 model Question {
@@ -75,6 +80,8 @@ model EmailAuth {
   idx       Int      @id @default(autoincrement())
   email     String   @db.VarChar
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("email_auth")
 }
 
 model EmailCode {
@@ -82,4 +89,6 @@ model EmailCode {
   email     String   @db.VarChar
   code      String   @db.VarChar
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("email_code")
 }

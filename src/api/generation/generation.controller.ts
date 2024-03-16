@@ -17,12 +17,15 @@ import { CreateGenerationDto } from './dto/create-generation.dto';
 import { CreateQuestionDto } from '../question/dto/create-question.dto';
 import { QuestionService } from '../question/question.service';
 import { QuestionEntity } from '../question/entity/question.entity';
+import { CreateApplicantDto } from '../applicant/dto/create-applicant.dto';
+import { ApplicantService } from '../applicant/applicant.service';
 
 @Controller('/generation')
 export class GenerationController {
   constructor(
     private readonly generationService: GenerationService,
     private readonly questionService: QuestionService,
+    private readonly applicantService: ApplicantService,
   ) {}
 
   @Get('/:uuid')
@@ -73,5 +76,15 @@ export class GenerationController {
     return {
       questions,
     };
+  }
+
+  @Post('/:uuid/applicant')
+  public async createApplicant(
+    @Param('uuid', ParseUUIDPipe) uuid: string,
+    @Body() createDto: CreateApplicantDto,
+  ): Promise<void> {
+    const generation = await this.generationService.getGenerationByUUID(uuid);
+
+    await this.applicantService.createApplicant(generation.idx, createDto);
   }
 }
