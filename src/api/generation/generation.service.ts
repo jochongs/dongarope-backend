@@ -10,8 +10,14 @@ export class GenerationService {
 
   public async getGenerationByUUID(uuid: string): Promise<GenerationEntity> {
     const generation = await this.prisma.generation.findUnique({
+      include: {
+        Group: true,
+      },
       where: {
         uuid,
+        Group: {
+          deletedAt: null,
+        },
         deletedAt: null,
       },
     });
@@ -28,6 +34,9 @@ export class GenerationService {
     createDto: CreateGenerationDto,
   ): Promise<GenerationEntity> {
     const result = await this.prisma.generation.create({
+      include: {
+        Group: true,
+      },
       data: {
         groupIdx,
         name: createDto.name,
@@ -41,8 +50,14 @@ export class GenerationService {
     groupIdx: number,
   ): Promise<GenerationEntity[]> {
     const generations = await this.prisma.generation.findMany({
+      include: {
+        Group: true,
+      },
       where: {
         groupIdx,
+        Group: {
+          deletedAt: null,
+        },
         deletedAt: null,
       },
       orderBy: {
