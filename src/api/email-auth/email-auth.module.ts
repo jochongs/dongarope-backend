@@ -23,5 +23,6 @@ import { PrismaModule } from '../../prisma/prisma.module';
   ],
   controllers: [EmailAuthController],
   providers: [EmailAuthService],
+  exports: [EmailAuthService],
 })
 export class EmailAuthModule {}

@@ -99,4 +99,12 @@ export class EmailAuthService {
 
     return true;
   }
+
+  public async deleteEmailAuthState(email: string): Promise<void> {
+    await this.prisma.emailAuth.deleteMany({
+      where: {
+        email,
+      },
+    });
+  }
 }
